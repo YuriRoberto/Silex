@@ -16,7 +16,10 @@ $app->get('/home', function(){
 });
 
 $app->post('/home', function(){
-    return "Post foi enviado!";
+    $name = $request->get('name','sem nome');
+    $data = $request->request->all();
+    print_r($data);die();
+    return new Response("Post foi enviado! Name:$name", 404);
 });
 
 $app->run();
