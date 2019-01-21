@@ -28,16 +28,18 @@ $app->get('\hello world', function(Silex\Application $app){
 
 $app->get('/home', function() use($app){
     
-    return $app['view.renderer']->render('home',[]);
+    return $app['view.renderer']->render('home');
 });
 
 $app->post('/get-name/{param1}/{param2}', function(Request $request, Silex\Application $app, $param2, $param1){
-    echo $app['valor1'];
     $name = $request->get('name','sem nome');
-    ob_start();
-    include __DIR__ . '/../templates/get-name.phtml';
-    $saida = ob_get_clean();
-    return $saida;
+    return $app['vew.renderer']->render('home', [
+        'name' => $name,
+        'param1' =>$param1,
+        'param2' => $param2
+    ]);
+
+    $name = $request->get('name','sem nome');
 });
 
 $app->run();
