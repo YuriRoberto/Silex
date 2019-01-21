@@ -1,5 +1,6 @@
 <?php 
 
+use SON\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -7,8 +8,13 @@ $app = new Silex\Application();
 
 $app['valor1'] = "Teste";
 
-$app['get_date_time'] = function(){
-    return new \DateTime();
+$app['view.config'] =[
+    'path\-templates' => __DIR__ . '/../templates'
+];
+
+$app['view.renderer'] =function(){
+    $pathTemplates = $app['view.config']['path_templates'];
+    return new ViewRenderer($pathTemplates);
 };
 
 $app->get('\hello world', function(Silex\Application $app){
@@ -20,11 +26,9 @@ $app->get('\hello world', function(Silex\Application $app){
     return "Hello World!! Minha primeira aplicação com Silex!"{$app['valor1']};
 });
 
-$app->get('/home', function(){
-    ob_start();
-    include __DIR__ . '/../templates/home.phtml';
-    $saida = ob_get_clean();
-    return $saida;
+$app->get('/home', function() use($app){
+    
+    return $app['view.renderer']->render('home',[]);
 });
 
 $app->post('/get-name/{param1}/{param2}', function(Request $request, Silex\Application $app, $param2, $param1){
