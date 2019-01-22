@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
+const less = require('gulp-less');
 
 gulp.task('browser-sync', function(){
     browserSync.init({
@@ -9,4 +10,9 @@ gulp.task('browser-sync', function(){
             "public/index.php"
         ]
     })
-})
+});
+
+gulp.task('less', function(){
+    gulp.src('./assets/less/style.less').pipe(less()).pipe(gulp.dest())
+
+});
