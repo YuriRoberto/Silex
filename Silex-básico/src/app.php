@@ -21,7 +21,7 @@ $app->get('\hello world', function(Silex\Application $app){
     echo $app['get_date_time']->format(\DateTime::W3C);
     echo "<br/>";
     sleep(10);
-    echo$app['get_date_time']->format(\DateTime::W3C);
+    echo $app['get_date_time']->format(\DateTime::W3C);
 
     return "Hello World!! Minha primeira aplicação com Silex!"{$app['valor1']};
 });
