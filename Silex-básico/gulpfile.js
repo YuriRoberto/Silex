@@ -7,7 +7,8 @@ gulp.task('browser-sync', function(){
         proxy: "localhost:8000",
         files: [
             "src/**/**.php",
-            "public/index.php"
+            "public/index.php",
+            "templates/**/*.phtml"
         ]
     })
 });
