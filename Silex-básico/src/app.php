@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
 
+$app['debug'] = true;
+
 $app['valor1'] = "Teste";
 
 $app['view.config'] =[
