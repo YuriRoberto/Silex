@@ -14,6 +14,8 @@ gulp.task('browser-sync', function(){
 });
 
 gulp.task('less', function(){
-    gulp.src('./assets/less/style.less').pipe(less()).pipe(gulp.dest())
+    gulp.src('./assets/less/style.less').pipe(less()).pipe(gulp.dest('./public/build/css'))
 
 });
+
+gulp.task('dev', ['less', 'browser-sync']);
