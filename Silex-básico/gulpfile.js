@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
 const less = require('gulp-less');
+const del = require('del');
 
 let DIR = {
     less: './assets/less',
@@ -22,6 +23,10 @@ gulp.task('browser-sync', function(){
             `${DIR.build_css}/**/*.css`
         ]
     })
+});
+
+gulp.task('clean', function(){
+    del.sync([DIR.build]);
 });
 
 gulp.task('less', function(){
