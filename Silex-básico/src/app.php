@@ -14,18 +14,32 @@ $app['view.config'] =[
     'path\-templates' => __DIR__ . '/../templates'
 ];
 
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver' => 'pdo_mysql',
+        'host' => 'localhost',
+        'dbname' => 'son_silex_basico',
+        'user' => 'root',
+        'password' => '1234'
+
+    ),
+));
+
 $app['view.renderer'] =function(){
     $pathTemplates = $app['view.config']['path_templates'];
     return new ViewRenderer($pathTemplates);
 };
 
-$app->get('\hello world', function(Silex\Application $app){
-    echo $app['get_date_time']->format(\DateTime::W3C);
-    echo "<br/>";
-    sleep(10);
-    echo $app['get_date_time']->format(\DateTime::W3C);
+$app->get('\create-table', function(Silex\Application $app){
+    
+    $file = fopen(__DIR__ . '/../data/schema.sql', 'r');
+    while ($line = fread($file, 4096)){
+        $app['db']->executeQuery($line);
+    }
 
-    return "Hello World!! Minha primeira aplicação com Silex!"{$app['valor1']};
+    fclose($file);
+
+    return "Tabelas criadas";
 });
 
 $app->get('/home', function() use($app){
