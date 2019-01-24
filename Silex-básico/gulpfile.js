@@ -10,6 +10,7 @@ let DIR = {
 
 
 DIR.build_css = `${DIR.build}/css`;
+DIR.build_js = `${DIR.build}/js`;
 
 gulp.task('browser-sync', function(){
     browserSync.init({
@@ -28,8 +29,15 @@ gulp.task('less', function(){
 
 });
 
+gulp.task('scripts', function(){
+    gulp.src([
+        './node_modules/jquery/dist/jquery.min.js',
+        './node_modules/bootstrap/dist/js/bootstrap.min.js'
+    ]).pipe(gulp.dest(DIR.build_js))
+})
+
 gulp.task('watch', function(){
     gulp.watch([`${DIR.less}/**/*.less`], ['less']);
 });
 
-gulp.task('dev', ['less', 'browser-sync']);
+gulp.task('dev', ['watch', 'scripts', 'less', 'browser-sync']);
