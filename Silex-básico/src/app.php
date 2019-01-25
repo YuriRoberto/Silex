@@ -1,17 +1,11 @@
-<?php 
-
-use SON\ViewRenderer;
+<?php
+use SON\View\ViewRenderer;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
-
 $app['debug'] = true;
-
-$app['valor1'] = "Teste";
-
-$app['view.config'] =[
-    'path\-templates' => __DIR__ . '/../templates'
+$app['view.config'] = [
+    'path_templates' => __DIR__ . '/../templates'
 ];
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
@@ -20,57 +14,51 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'host' => 'localhost',
         'dbname' => 'son_silex_basico',
         'user' => 'root',
-        'password' => '1234'
-
+        'password' => 'root'
     ),
 ));
 
-$app['view.renderer'] =function(){
+$app['view.renderer'] = function () use ($app) {
     $pathTemplates = $app['view.config']['path_templates'];
     return new ViewRenderer($pathTemplates);
 };
 
-$app->get('\create-table', function(Silex\Application $app){
-    
+$app->get('/create-table', function (Silex\Application $app) {
     $file = fopen(__DIR__ . '/../data/schema.sql', 'r');
-    while ($line = fread($file, 4096)){
+    while ($line = fread($file, 4096)) {
         $app['db']->executeQuery($line);
     }
-
     fclose($file);
-
     return "Tabelas criadas";
 });
 
-$app->get('/posts/create', function () use ($app) {
-    return $app['view.renderer']->render('posts/create');
+$site = include __DIR__ . '/controllers/site.php';
+$app->mount('/', $site);
+$app->mount('/admin', function($admin) use($app){
+    $post = include __DIR__ . '/controllers/posts.php';
+    $admin->mount('/posts', $post);
 });
 
-$app->post('/post/create', function(Request $request) use($app){
-    $db = $app['db'];
-    $data = $request->request->all();
-    $db->insert('posts', [
-        'title' => $data['title'],
-        'content' => $data['content']
-    ]);
-    return $app->redirect('/posts/create');
+$app->error(function(\Exception $e, Request $request, $code) use($app){
+    switch ($code){
+        case 404:
+            return $app['view.renderer']->render('errors/404', [
+                'message' => $e->getMessage()
+            ]);
+    }
 });
 
-$app->get('/home', function() use($app){
-    
+/*$app->get('/home', function () use ($app) {
+    dump($app);
     return $app['view.renderer']->render('home');
 });
-
-$app->post('/get-name/{param1}/{param2}', function(Request $request, Silex\Application $app, $param2, $param1){
-    $name = $request->get('name','sem nome');
-    return $app['vew.renderer']->render('home', [
-        'name' => $name,
-        'param1' =>$param1,
-        'param2' => $param2
-    ]);
-
-    $name = $request->get('name','sem nome');
-});
-
+$app->post('/get-name/{param1}/{param2}',
+    function (Request $request, Silex\Application $app, $param2, $param1) {
+        $name = $request->get('name', 'sem nome');
+        return $app['view.renderer']->render('get-name', [
+            'name' => $name,
+            'param1' => $param1,
+            'param2' => $param2
+        ]);
+    });*/
 $app->run();
-
