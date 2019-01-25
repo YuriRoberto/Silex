@@ -42,6 +42,20 @@ $app->get('\create-table', function(Silex\Application $app){
     return "Tabelas criadas";
 });
 
+$app->get('/posts/create', function () use ($app) {
+    return $app['view.renderer']->render('posts/create');
+});
+
+$app->post('/post/create', function(Request $request) use($app){
+    $db = $app['db'];
+    $data = $request->request->all();
+    $db->insert('posts', [
+        'title' => $data['title'],
+        'content' => $data['content']
+    ]);
+    return $app->redirect('/posts/create');
+});
+
 $app->get('/home', function() use($app){
     
     return $app['view.renderer']->render('home');
