@@ -8,13 +8,11 @@ let DIR = {
     build: './public/build'
 };
 
-
-
 DIR.build_css = `${DIR.build}/css`;
 DIR.build_js = `${DIR.build}/js`;
 
 gulp.task('browser-sync', function(){
-    browserSync.init({
+   browserSync.init({
         proxy: "localhost:8000",
         files: [
             "src/**/**.php",
@@ -22,16 +20,17 @@ gulp.task('browser-sync', function(){
             "templates/**/*.phtml",
             `${DIR.build_css}/**/*.css`
         ]
-    })
+   })
 });
 
 gulp.task('clean', function(){
-    del.sync([DIR.build]);
+   del.sync([DIR.build]);
 });
 
 gulp.task('less', function(){
-    gulp.src(`${DIR.less}/style.less`).pipe(less()).pipe(gulp.dest('DIR.build_css'))
-
+    gulp.src(`${DIR.less}/style.less`)
+        .pipe(less())
+        .pipe(gulp.dest(DIR.build_css));
 });
 
 gulp.task('scripts', function(){
@@ -39,10 +38,10 @@ gulp.task('scripts', function(){
         './node_modules/jquery/dist/jquery.min.js',
         './node_modules/bootstrap/dist/js/bootstrap.min.js'
     ]).pipe(gulp.dest(DIR.build_js))
-})
-
-gulp.task('watch', function(){
-    gulp.watch([`${DIR.less}/**/*.less`], ['less']);
 });
 
-gulp.task('dev', ['watch', 'scripts', 'less', 'browser-sync']);
+gulp.task('watch', function(){
+   gulp.watch([`${DIR.less}/**/*.less`], ['less']);
+});
+
+gulp.task('dev', ['clean','watch','scripts','less', 'browser-sync']);
