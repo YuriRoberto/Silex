@@ -1,5 +1,7 @@
 <?php
+
 use Silex\Provider;
+
 $app->register(new \SON\Providers\AppServiceProvider(), [
     'injector.interfaces' => [
         'db' => \SON\Service\DoctrineDbalInjectorInterface::class,
@@ -7,6 +9,7 @@ $app->register(new \SON\Providers\AppServiceProvider(), [
         'twig' => \SON\Service\TwigInjectorInterface::class
     ]
 ]);
+
 $app->register(new Provider\HttpFragmentServiceProvider());
 $app->register(new Provider\ServiceControllerServiceProvider());
 $app->register(new Provider\TwigServiceProvider(), [
@@ -15,10 +18,12 @@ $app->register(new Provider\TwigServiceProvider(), [
         'cache' => __DIR__ . '/../data/cache/twig'
     ]
 ]);
+
 $app->register(new Provider\AssetServiceProvider(), [
     'assets.version' => 'v2',
     'assets.version_format' => '%s?version=%s'
 ]);
+
 $app->register(new Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver' => 'pdo_mysql',
@@ -28,6 +33,7 @@ $app->register(new Provider\DoctrineServiceProvider(), array(
         'password' => 'root'
     ),
 ));
+
 if ($app['debug']) {
     $app->register(new Provider\VarDumperServiceProvider());
     $app->register(new Provider\WebProfilerServiceProvider(), [
